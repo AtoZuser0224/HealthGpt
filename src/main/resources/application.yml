@@ -1,0 +1,38 @@
+server:
+  port: 8080
+spring:
+  mail:
+    host: smtp.naver.com
+    port: 465
+    username: wag0224
+    password: wagwagwag1!
+    properties:
+      mail.smtp.auth: true
+      mail.smtp.ssl.enable: true
+      mail.smtp.ssl.trust: smtp.naver.com
+  config:
+    name: application
+  main:
+    allow-bean-definition-overriding: true
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+  messages:
+    basename: i18n/exception
+  datasource:
+    url: jdbc:mariadb://localhost:3307/test_server
+    driver-class-name: org.mariadb.jdbc.Driver
+    username: webuser
+    password: bwsbwsbws1
+  jpa:
+    hibernate:
+      ddl-auto: update # 또는 "create" 또는 "validate", 데이터베이스 스키마 자동 생성 옵션
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MariaDBDialect
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: c2lsdmVybmluZS10ZWNoLXNwcmluZy1ib290LWp3dC10dXRvcmlhbC1zZWNyZXQtc2lsdmVybmluZS10ZWNoLXNwcmluZy1ib290LWp3dC10dXRvcmlhbC1zZWNyZXQK
