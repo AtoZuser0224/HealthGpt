@@ -8,9 +8,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.awt.print.Book;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Builder // builder를 사용할 수 있게 한다.
@@ -48,8 +46,12 @@ public class User implements UserDetails {
     private String birth;
 
     @OneToMany(mappedBy = "user")
+    @Builder.Default
     private List<Today> todays = new ArrayList<>();
 
+    @ElementCollection
+    @Builder.Default
+    private Map<Integer,String > etcs = new HashMap<>();
     // Getter, Setter, Constructors, etc.
 
 

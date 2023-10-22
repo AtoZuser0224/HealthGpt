@@ -69,4 +69,16 @@ public class ExceptionAdvice {
     public CommonResult TodayNotFoundException(HttpServletRequest request, CTodayRemainedException e) {
         return responseService.getFailResult((Integer.parseInt(getMessage("todayNotFoundException.code"))), getMessage("todayNotFoundException.msg"));
     }
+    @ExceptionHandler(CEmailNotFoundException.class)
+    public CommonResult EmailNotFoundException(HttpServletRequest request, CTodayRemainedException e) {
+        return responseService.getFailResult((Integer.parseInt(getMessage("emailNotFoundException.code"))), getMessage("emailNotFoundException.msg"));
+    }
+    @ExceptionHandler(CEmailTimeOutException.class)
+    public CommonResult CEmailTimeOutException(HttpServletRequest request, CTodayRemainedException e) {
+        return responseService.getFailResult((Integer.parseInt(getMessage("emailTimeOut.code"))), getMessage("emailTimeOut.msg"));
+    }
+    @ExceptionHandler(CEmailverificationFailException.class)
+    public CommonResult CEmailverificationFailException(HttpServletRequest request, CTodayRemainedException e) {
+        return responseService.getFailResult((Integer.parseInt(getMessage("emailverificationFail.code"))), getMessage("emailverificationFail.msg"));
+    }
 }

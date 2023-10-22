@@ -2,7 +2,6 @@ package uni.server.healthgpt.controller;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -59,15 +58,18 @@ public class SignController {
                 .height(sign.getHeight())
                 .weight(sign.getWeight())
                 .birth(sign.getBirth())
+                .etcs(sign.getEtcs())
                 .build());
         log.info(sign.getEmail()+" user is signup is success");
         return responseService.getSuccessResult();
     }
     @ApiOperation(value = "메일", notes = "메일인증을 한다.")
     @PostMapping("/mail")
-    public String sendMail(@RequestBody MailRequest mail) throws Exception {
-
-        return mailService.sendSimpleMessage(mail.getMail());
+    public CommonResult sendMail(@RequestBody MailRequest mail) throws Exception {
+        if (mailService.sendSimpleMessage(mail.getMail())){
+            return responseService.getFailResult(-1009, "이메일이 옳바르지 않습니다.");
+        }
+        return responseService.getSuccessResult();
     }
     @ApiOperation(value = "메일", notes = "메일이 있는지 확인한다.")
     @PostMapping("/ismail")
@@ -76,7 +78,17 @@ public class SignController {
     }
     @ApiOperation(value = "메일", notes = "메일이 있는지 확인한다.")
     @PostMapping("/equalMailcode")
-    public boolean IsMail(@RequestBody isMailRequest isMailRequest) {
-        return mailService.isMail(isMailRequest.getMail(), isMailRequest.getCode());
+    public CommonResult IsMail(@RequestBody isMailRequest isMailRequest) {
+        int n = mailService.isMail(isMailRequest.getMail(), isMailRequest.getCode());
+        if (n==1){//n==1 은 인증중인 이메일이 없을때 n==2은 시간초과 , n==3은 인증 실패를 나타냄
+            return responseService.getFailResult(-1006,"인증 중인 이메일을 찾을수 없어요.");
+        } else if (n==2) {
+            return responseService.getFailResult(-1007,"이메일 인증이 시간초과 되었습니다.");
+        } else if (n==3) {
+            return responseService.getFailResult(-1008,"이메일 인증이 실패하였습니다.");
+        }else {
+            return responseService.getSuccessResult();
+        }
+
     }
 }

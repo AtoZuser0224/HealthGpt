@@ -81,7 +81,7 @@ public class MailService {
     // sendSimpleMessage 의 매개변수로 들어온 to 는 곧 이메일 주소가 되고,
     // MimeMessage 객체 안에 내가 전송할 메일의 내용을 담는다.
     // 그리고 bean 으로 등록해둔 javaMail 객체를 사용해서 이메일 send!!
-    public String sendSimpleMessage(String to) throws Exception {
+    public boolean sendSimpleMessage(String to) throws Exception {
 
         ePw = createKey(); // 랜덤 인증번호 생성
 
@@ -89,8 +89,7 @@ public class MailService {
         try {// 예외처리
             emailsender.send(message);
         } catch (MailException es) {
-            es.printStackTrace();
-            throw new IllegalArgumentException();
+            return false;
         }
         MailPass mailPass = MailPass.builder()
                 .email(to)
@@ -98,14 +97,22 @@ public class MailService {
                 .date(LocalDateTime.now())
                 .build();
         mailPassRepo.save(mailPass);
-        return "success";
+        return true;
     }
-    public boolean isMail(String to,String code){
+    public Integer isMail(String to,String code){
         if (mailPassRepo.findById(to).isEmpty()){
-            return false;
+            return 1;
         }
         LocalDateTime date = mailPassRepo.findById(to).get().getDate();
         LocalDateTime now = LocalDateTime.now();
-        return now.getDayOfYear() == date.getDayOfYear() && now.getMinute() <= date.getMinute() + 4 && Objects.equals(mailPassRepo.findById(to).get().getCode(), code);
+        if (now.getDayOfYear() == date.getDayOfYear() && now.getMinute() <= date.getMinute() + 4){
+            if (Objects.equals(mailPassRepo.findById(to).get().getCode(), code)){
+                return 0;
+            }else{
+                return 2;
+            }
+        }else{
+            return 3;
+        }
     }
 }

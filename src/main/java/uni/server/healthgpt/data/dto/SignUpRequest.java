@@ -2,6 +2,8 @@ package uni.server.healthgpt.data.dto;
 
 import lombok.Data;
 
+import java.util.Map;
+
 @Data
 public class SignUpRequest {
     String email;
@@ -10,4 +12,5 @@ public class SignUpRequest {
     float height;
     float weight;
     String birth;
+    Map<Integer,String > etcs;
 }
